@@ -1,37 +1,44 @@
+%%Setting up input signal
 cor_func = @(x) exp(-x.^2); %Correlation function
-x=linspace(0,1);
-T=1; %time period
-spec=disft(cor_func(x));
-ab_spec=abs(spec);
-plot(0:1/T:(length(x)-1)/T,ab_spec);%plotting dft of cor_func
-figure;
-plot(0:1/T:(length(x)-1)/T,ab_spec.^2);
-avg_pow=mean(ab_spec.^2);
-vari=0.5*avg_pow*((2*pi)^3);%line(1-d)/cube edge(3-d) length 1
-st_dev=sqrt(vari);
-n=100;%number of co-ordinates in the line/cube edge(3-d)
-a = st_dev*randn(n/2-1,1);
-a(n/2)=0;
-a(n/2+1:n)=a(n/2:-1:1);
-b = st_dev*randn(n/2-1,1);
-b(n/2)=0;
-b(n/2+1:n)=-b(n/2:-1:1);
-c=a+1j*b;
-l=linspace(-.5,.5);
+x=linspace(0,10);
+len=length(x);
+dx=x(2)-x(1);%sampling interval
+T=max(x); %fundamental time period
+s_rat=1/dx;%sampling rate
 
-for r=1:n
-    summ=0;
-    for t=1:n
-        summ= summ+c(t)*exp(1j*2*pi*l(t)*r);
-    end
-    y(r)=summ;
-end
-y=abs(y);
+%% DFT of input signal
+spec=disft(cor_func(x),len);
+ab_spec=abs(spec);
+
+%%  Plot DFT: check
+plot((0:length(x)-1)*s_rat/length(x),ab_spec);%plotting dft of cor_func
+
+
+%% Generating random field
+
+vari= 0.5*(2*pi/T)*abs(spec);
+st_de=sqrt(vari);
+
+a(1:len/2-1)=randn(len/2-1,1).*st_de(1:len/2-1)';
+a(len/2+2:len)=a(len/2-1:-1:1);
+
+b(1:len/2-1)=randn(len/2-1,1).*st_de(1:len/2-1)';
+b(len/2+2:len)=-b(len/2-1:-1:1);
+
+c=a+1j*b;
+r_g_fld=invft(c,len);
+y=abs(r_g_fld);
+
+%% Checking correlation of obtained field
+
 [Y1,Y2]=meshgrid(y,y);
 Y=sum(spdiags(Y1.*Y2));
-plot(0:99,Y(100:199),'r*');
-hold on;
-plot(0:.01:.99,cor_func(0:.01:.99),'g*');
+mea_y=Y(1:100)./(1:100);
+plot(linspace(0,10),Y(1:100));
+figure
+plot(linspace(0,10),mea_y);
+figure;
+plot(linspace(0,10),cor_func(x),'b*');
 
 
 
