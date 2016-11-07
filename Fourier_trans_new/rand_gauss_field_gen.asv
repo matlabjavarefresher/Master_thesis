@@ -1,0 +1,23 @@
+function [ y,ab_spec,c,s_rat] = rand_gauss_field_gen(cor_func,x)
+
+%% Setting up the input signal
+inp=feval(cor_func,x); % Generating input signal
+figure;
+plot(x,inp);
+[len,dx,T,s_rat]=inp_para(x); % Generating input signal's parameters
+
+%% FFT of input signal
+spec=fft(inp);
+ab_spec=abs(spec);
+figure;
+plot((0:length(x)-1)*s_rat/length(x),ab_spec);%plotting dft of cor_func
+
+%% Setting the input for the inverse Fourier transform (IFFT)
+c=c_gen(ab_spec,T,len);
+
+%% Generating the random gaussian field
+y=ifft(c);
+
+
+end
+
