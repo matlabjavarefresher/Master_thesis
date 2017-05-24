@@ -1,0 +1,140 @@
+function [a]=compute_side_lengths(nei,tresh)
+
+% Computing side lengths a1, a2, a3, a4 as described in Utilizing Minkowsky
+% functionals for image analysis, Mantz et al., 2008, Online at 
+% stacks.iop.org/JSTAT/2008/P12015
+
+        a1 = (A(nei(4))-tresh) / (A(nei(4)) - A(nei(1)));
+        a2 = (A(nei(1))-tresh) / (A(nei(1)) - A(nei(2)));
+        a3 = (A(nei(3))-tresh) / (A(nei(3)) - A(nei(2))); 
+        a4 = (A(nei(4))-tresh) / (A(nei(4)) - A(nei(2)));
+
+
+switch cas
+    
+     case 0
+         a1=0; 
+         a2=0; 
+         a3=0; 
+         a4=0;
+    
+          case 1:
+    
+            f = f + .5f * a1 * a4;
+            u = u + Math.sqrt(a1 * a1 + a4 * a4);
+            chi = chi + .25f;
+          
+
+          case 2:
+            a1 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i + 1][j]);
+            a2 = (matrix[i + 1][j] - threshold) / (matrix[i + 1][j] - matrix[i + 1][j + 1]);
+            f = f + .5f * (1 - a1) * (a2);
+            u = u + Math.sqrt((1 - a1) * (1 - a1) + a2 * a2);
+            chi = chi + .25f;
+          break;
+
+          case 3:
+            a2 = (matrix[i + 1][j] - threshold) / (matrix[i + 1][j] - matrix[i + 1][j + 1]);
+            a4 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i][j + 1]);
+            f = f + a2 + .5f * (a4 - a2);
+            u = u + Math.sqrt(1 + (a4 - a2) * (a4 - a2));
+          break;
+
+          case 4:
+            a2 = (matrix[i + 1][j] - threshold) / (matrix[i + 1][j] - matrix[i + 1][j + 1]);
+            a3 = (matrix[i][j + 1] - threshold) / (matrix[i][j + 1] - matrix[i + 1][j + 1]);
+            f = f + .5f * (1 - a2) * (1 - a3);
+            u = u + Math.sqrt((1 - a2) * (1 - a2) + (1 - a3) * (1 - a3));
+            chi = chi + .25f;
+          break;
+
+          case 5:
+            a1 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i + 1][j]);
+            a2 = (matrix[i + 1][j] - threshold) / (matrix[i + 1][j] - matrix[i + 1][j + 1]);
+            a3 = (matrix[i][j + 1] - threshold) / (matrix[i][j + 1] - matrix[i + 1][j + 1]);
+            a4 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i][j + 1]);
+            f = f + 1 - .5f * (1 - a1) * a2 - .5f * a3 * (1 - a4);
+            u = u + Math.sqrt((1 - a1) * (1 - a1) + a2 * a2) + Math.sqrt(a3 * a3 + (1 - a4) * (1 - a4));
+            chi = chi + .5f;
+          break;
+
+          case 6:
+            a1 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i + 1][j]);
+            a3 = (matrix[i][j + 1] - threshold) / (matrix[i][j + 1] - matrix[i + 1][j + 1]);
+            f = f + (1 - a3) + .5f * (a3 - a1);
+            u = u + Math.sqrt(1 + (a3 - a1) * (a3 - a1));
+          break;
+
+          case 7:
+            a3 = (matrix[i][j + 1] - threshold) / (matrix[i][j + 1] - matrix[i + 1][j + 1]);
+            a4 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i][j + 1]);
+            f = f + 1 - .5f * a3 * (1 - a4);
+            u = u + Math.sqrt(a3 * a3 + (1 - a4) * (1 - a4));
+            chi = chi - .25f;
+          break;
+
+          case 8:
+            a3 = (matrix[i][j + 1] - threshold) / (matrix[i][j + 1] - matrix[i + 1][j + 1]);
+            a4 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i][j + 1]);
+            f = f + .5f * a3 * (1 - a4);
+            u = u + Math.sqrt(a3 * a3 + (1 - a4) * (1 - a4));
+            chi = chi + .25f;
+          break;
+
+          case 9:
+            a1 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i + 1][j]);
+            a3 = (matrix[i][j + 1] - threshold) / (matrix[i][j + 1] - matrix[i + 1][j + 1]);
+            f = f + a1 + .5f * (a3 - a1);
+            u = u + Math.sqrt(1 + (a3 - a1) * (a3 - a1));
+          break;
+
+          case 10:
+            a1 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i + 1][j]);
+            a2 = (matrix[i + 1][j] - threshold) / (matrix[i + 1][j] - matrix[i + 1][j + 1]);
+            a3 = (matrix[i][j + 1] - threshold) / (matrix[i][j + 1] - matrix[i + 1][j + 1]);
+            a4 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i][j + 1]);
+            f = f + 1 - .5f * a1 * a4 + .5f * (1 - a2) * (1 - a3);
+            u = u + Math.sqrt(a1 * a1 + a4 * a4) + Math.sqrt((1 - a2) * (1 - a2) + (1 - a3) * (1 - a3));
+            chi = chi + .5f;
+          break;
+
+          case 11:
+            a2 = (matrix[i + 1][j] - threshold) / (matrix[i + 1][j] - matrix[i + 1][j + 1]);
+            a3 = (matrix[i][j + 1] - threshold) / (matrix[i][j + 1] - matrix[i + 1][j + 1]);
+            f = f + 1 - .5f * (1 - a2) * (1 - a3);
+            u = u + Math.sqrt((1 - a2) * (1 - a2) + (1 - a3) * (1 - a3));
+            chi = chi - .25f;
+          break;
+
+          case 12:
+            a2 = (matrix[i + 1][j] - threshold) / (matrix[i + 1][j] - matrix[i + 1][j + 1]);
+            a4 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i][j + 1]);
+            f = f + (1 - a2) + .5f * (a2 - a4);
+            u = u + Math.sqrt(1 + (a2 - a4) * (a2 - a4));
+          break;
+
+          case 13:
+            a1 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i + 1][j]);
+            a2 = (matrix[i + 1][j] - threshold) / (matrix[i + 1][j] - matrix[i + 1][j + 1]);
+            f = f + 1 - .5 * (1 - a1) * a2;
+            u = u + Math.sqrt((1 - a1) * (1 - a1) + a2 * a2);
+            chi = chi - .25f;
+´         break;
+
+          case 14:
+            a1 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i + 1][j]);
+            a4 = (matrix[i][j] - threshold) / (matrix[i][j] - matrix[i][j + 1]);
+            f = f + 1 - .5f * a1 * a4;
+            u = u + Math.sqrt(a1 * a1 + a4 * a4);
+            chi = chi - .25f;
+          break;
+
+          case 15:
+            f ++;
+          break;
+
+end
+
+
+end
+

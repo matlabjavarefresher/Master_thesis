@@ -67,6 +67,7 @@ theta_k_alpha(k,k+1) = eye(m);
 % Convert to compact form and include mean
 % [u2_i_k, theta2_k_alpha] = kl_pce_to_compact_form(sin(pi*x'), r_i_k, sigma_k, theta_k_alpha);
 
+
 % The conversion made explicit
 % a) Multiply in the sigmas 
 u_i_k = binfun(@times, r_i_k, sigma_k);

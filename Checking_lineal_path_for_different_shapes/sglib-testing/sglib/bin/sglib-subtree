@@ -1,0 +1,99 @@
+#!/bin/bash
+
+SCRIPT=$(basename $0)
+BASE="${SCRIPT%-subtree}"
+REMOTE_SSH="git@github.com:ezander/$BASE.git"
+REMOTE_ANON="https://github.com/ezander/$BASE.git"
+BRANCH_PREFIX="subtree-"
+
+DRY_RUN=false
+if [[ $1 == "dryrun" ]]; then
+    echo "Dry-run: not executing commands."
+    DRY_RUN=true
+    shift
+fi
+
+function check_prefix_dir() {
+    if [[ ! -d "$PREFIX" ]]; then
+        echo "No $BASE directory found (tried $PREFIX)."
+        echo "First change into root directory of subproject "
+        echo "and make sure $BASE exists as subdirectory!";
+        echo "";
+        echo "Maybe you should first make an ADD."
+        exit 1;
+    fi
+}
+
+changed_dir=false
+while [[ ! -d ".git" && $(pwd) != "/" ]]; do
+    cd ..
+    changed_dir=true
+done
+if [[ ! -d ".git" ]]; then
+    echo "Error: Not a git repository (or any of the parent directories)."
+    echo "Please switch to your project directory."
+    exit 1;
+fi
+
+PREFIX=$(find . -name "$BASE" -type d | cut -c3-)
+PUSH_BRANCH="${BRANCH_PREFIX}$(basename $(pwd))"
+
+GIT="git"
+if $DRY_RUN; then
+    GIT="echo $GIT"
+    echo "BASE: $BASE"
+    echo "PREFIX: $PREFIX"
+fi
+GIT_SUBTREE="$GIT subtree"
+
+
+
+
+case "$1" in
+    add)
+        if [[ -z "$PREFIX" ]]; then
+            PREFIX="$BASE"
+        fi
+        if [[ -d "$PREFIX" ]]; then
+            rmdir "$PREFIX"
+        fi
+        $GIT_SUBTREE add --squash --prefix="$PREFIX" "$REMOTE_ANON" master
+        ;;
+    pull)
+        check_prefix_dir
+        $GIT_SUBTREE pull --squash --prefix="$PREFIX" "$REMOTE_ANON" master
+        ;;
+    fetch)
+        check_prefix_dir
+        $GIT fetch "$REMOTE_ANON"
+        ;;
+    freshpush)
+        check_prefix_dir
+        $GIT push "$REMOTE_SSH" ":$PUSH_BRANCH"
+        $GIT_SUBTREE push --prefix="$PREFIX" "$REMOTE_SSH" "$PUSH_BRANCH"
+        ;;
+    push)
+        check_prefix_dir
+        $GIT_SUBTREE push --prefix="$PREFIX" "$REMOTE_SSH" "$PUSH_BRANCH"
+        ;;
+    pushdirect)
+        check_prefix_dir
+        $GIT_SUBTREE push -d --prefix="$PREFIX" "$REMOTE_SSH" "master"
+        ;;
+    *)
+        if [[ -n "$1" ]]; then
+            echo "Unknown or empty subcommand '$1'"
+        fi
+        cat <<EOF
+Use '$BASE-subtree <subcommand>' 
+  Here <subcommand> can be one of 'pull', 'push' or 'pushdirect', 'add', or 'fetch'
+    pull:       pull (i.e. fetch and merge) changes into local repo
+    fetch:      only fetch changes, but don't merge
+    push:       push into the branch '$PUSH_BRANCH' allowing some checks
+                before merging into the master branch
+    pushdirect: will push directly into master (use with care)
+    add:        add the subtree (necessary only once)
+EOF
+        exit 1
+        ;;
+esac

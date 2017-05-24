@@ -1,0 +1,38 @@
+1) linspace x=(-100,100,101) gives whole numbers for x, if x=(-100,100,100) is used you get decimals and don't
+   get 0 in your signal. 
+2) For the given correl func, evaluate correl func at the given x - this is your input signal.
+   --- Ensure input signal is symmetric about the middle element (odd number of elements)/ middle 2 elements 
+       (even number of elements) of your vector. 
+3) Do fft for input signal with symmetry summation, ie. go from -N to N with N being (input vector length/2 -0.5)
+   ------- N is assigned in this manner because we require a 2*N+0.5(given input vector length) length array containing elements
+   picked equidistant from 0. We need [-N:N] to contain elements equidistant and symmetric from zero because
+   we require a symmetric real output from the fft.
+4) With the output from the fft, we generate a complex number set which is conjugate symmetric and with first
+   element real
+5) We use the conjugate symmetric set and perform an ifft on it to get the required realisation y (if ifft is
+   done on a conjugate symmetric plus first element zero set, we get real numbers as output) which we need.
+6) Each output is a column vector which is stored as columns of a 2d array with each column representing
+   a separate realisation.
+7) For each realisation, we comupte covariance matrix and store these matrices in a 3d array with the 
+   third dimension corresponding to different realisations
+8) We take average of generated random realisation vectors which is the average realisation
+9) We take the diagonals of the covariance matrix as each diagonal represents a particular distance b/w the
+   elements of the random realisation vector. We sum the elements of each diagonal and divide by number of 
+   elements in the diagonal to get the correlation coefficients corresponding to each distance b/w the pixels.
+   ---- this means that we are taking the different values of covariances for each distance and getting their
+        mean and then plotting mean covariance for a given distance and not mean correlation for a given 
+        distance.
+
+10) What we have done here is average covariance (for a given distance - spdiags) versus distance  plot. It is not
+   actually correl coeffs vs distance 
+        
+------------------------------------------------------------------------------------------------
+Changing interval discretisation linspace[-100,100,101]
+ 
+1) putting in more points - fluctuation around zero becomes stronger. Above 800 points, due to fine dscretisation
+   output of ifft has some small insignificant residual complex values which should be ignored
+2) putting in less points - entire curve fluctuates and doesnt closely represent given covariance function
+3) At small number of points, fluctuation for even number of points is more around zero compared to odd 
+   numbered points as zero is not included in the points for even number of points 
+
+

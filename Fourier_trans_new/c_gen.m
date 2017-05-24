@@ -1,7 +1,7 @@
-function [c] = c_gen(ab_spec,T,len)
+function [c] = c_gen(spec,T,len)
 
-vari= 0.5*(2*pi/T)*ab_spec;
-st_de=sqrt(vari);
+vari= 2*pi/T*spec;
+st_de=1/2*sqrt(vari);
 
 
 chk=mod(len,2);
@@ -21,6 +21,7 @@ switch chk;
         
         
     case 1
+ 
         
         a(1)=randn(1)*st_de(1);
         a(2:ceil(len/2-1))=randn(ceil(len/2-2),1).*st_de(2:ceil(len/2-1))';
