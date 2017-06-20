@@ -2,8 +2,8 @@ clear
 clc
 
 %% Initialising the Image (background for the shapes)
-X1Y1_IM = [3; 4.5];
-X2Y2_IM = [1000; 1000];
+X1Y1_IM = [1; 1];
+X2Y2_IM = [10; 10];
 
 X_U_L=1;
 Y_U_L=1;
@@ -12,14 +12,13 @@ res_y=1/Y_U_L;
 res=[res_x;res_y];
 
 N = ceil((X2Y2_IM-X1Y1_IM).*res);
-img0 = zeros(N')';
+imag = zeros( N' );
+
 
 shape_type='smooth_convex';  % 'smooth_convex', Other options if and when required
 NS=200;% Number of shapes required
 max_try=10*NS; % Max number of tries to place n shapes on the image
-ovlp=0; %1 for overlap and 0 for no overlap
-cutoff_func= @cutoff_sharp;
-combinator_func= @combine_sum1;
+ovlp=1; %1 for overlap and 0 for no overlap
 
 %% Generate and display image
 
@@ -27,22 +26,19 @@ switch shape_type
     
     case 'smooth_convex'
         
-        S=SimParamSet();
-       
-        S.add(SimParameter('a_dist',translate(BetaDistribution(2,2), 60, 10)));
-       
-        S.add(SimParameter('b_dist',translate(BetaDistribution(2,2), 40, 20)));
+        a_dist=gendist_create('beta', {2,2}, 'shift',60,'scale', 10);
+        r_x= gendist_sample(max_try,a_dist);
         
-        S.add(SimParameter('theta_dist',translate(BetaDistribution(2,2), 0, pi/2)));
+        b_dist=gendist_create('beta', {2,2}, 'shift',40,'scale', 20);
+        r_y= gendist_sample(max_try,b_dist);
         
-        S.add(SimParameter('pow_dist',translate(BetaDistribution(2,2), 2, 0)));
+        th_dist=gendist_create('beta', {2,2}, 'shift',0,'scale',pi/2);
+        th= gendist_sample(max_try,th_dist);
         
-        S.add(SimParameter('C_X',UniformDistribution(-0.2*(size(img0,2)/res(1)),1.2*(size(img0,2)/res(1)))));
+        pow_dist=gendist_create('beta', {2,2}, 'shift',1.5,'scale',0);
+        pow= gendist_sample(max_try,pow_dist);
         
-        S.add(SimParameter('C_Y',UniformDistribution(-0.2*(size(img0,1)/res(2)),1.2*(size(img0,1)/res(2)))));
-        
-        [img1,shp_count]=create_image(img0,res,NS,ovlp,max_try,shape_type,X1Y1_IM,S,cutoff_func,combinator_func);
-        
+        [img1,shp_count]=create_image_obs(img0,im_res,shape_type,n,max_try,ovlp,r_x,r_y,th,pow);
         disp([num2str(shp_count) ' shapes were placed']);
         
 end
@@ -102,5 +98,4 @@ imshow(img1);
 %
 % % subplot(2,3,6)
 % % plot(1:length(c_l),cumsum(c_l));
-
 % % title('Chord length cumsum function in x')

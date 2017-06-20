@@ -18,6 +18,7 @@ w=2*sqrt(a^2+b^2);
 X1=floor(c_x-w/2);
 Y1=floor(c_y-w/2);
 
+
 X2=ceil(c_x+w/2);
 Y2=ceil(c_y+w/2);
 

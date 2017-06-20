@@ -1,4 +1,4 @@
-function [img,shp_count]=create_image(img,res,shp_type,n,max_try,ovlp,varargin)
+function [img,shp_count]=create_image_obs(img,res,shp_type,n,max_try,ovlp,varargin)
 
 shp_count=0;
 attmpt=0;

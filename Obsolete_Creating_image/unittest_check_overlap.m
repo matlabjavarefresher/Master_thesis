@@ -1,5 +1,6 @@
 function unittest_check_overlap()
 
+
 % CHECK_OVERLAP_TEST to test the
 % CHECK_OVERLAP function.
 %
@@ -8,7 +9,6 @@ function unittest_check_overlap()
 %   <author>Prem Ratan M
 %   <T.U.Braunschweig>
 % munit_set_function('check_overlap');
-
 ovlp=0;
 X1Y1_IM=[1;1];
 X2Y2_IM=[1000;1000];
@@ -57,16 +57,58 @@ assert((~ad8)==0,'Fail in check_overlap');
 assert(isequal(~[ad10;ad11;ad12],ones(3,1)));
 assert((~ad9)==0,'Fail in check_overlap');
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 % Placing the shape at the bottom right corner
 
-[loc_shape_4, IR1C1_SH_3] = compute_local_shape(X1Y1_IM, res1, a, p, [X2Y2_IM(1)-1; X2Y2_IM(2)-1], th,@cutoff_sharp);
 
-[ad13]=check_overlap(ovlp,loc_shape_4,imag1,IR1C1_SH_3);
-[ad14]=check_overlap(ovlp,loc_shape_4,imag2,IR1C1_SH_3);
-[ad15]=check_overlap(ovlp,loc_shape_4,imag3,IR1C1_SH_3);
-[ad16]=check_overlap(ovlp,loc_shape_4,imag4,IR1C1_SH_3);
 
-assert(isequal(~[ad13;ad14;ad16],ones(3,1)));
-assert((~ad15)==0,'Fail in check_overlap');
+
+% [loc_shape_2, ~] = compute_local_shape(gx1, res, a, p, [X1Y1_IM(1)+1; X1Y1_IM(2)+1], th);
+% [ad2]=check_overlap(ovlp,loc_shape_2,imag1);
+% 
+% [loc_shape_3, ~] = compute_local_shape(gx1, res, a, p, [X2Y2_IM(1)-1; X2Y2_IM(2)-1], th);
+% [ad3]=check_overlap(ovlp,loc_shape_3,imag1);
+% 
+% 
+% [loc_shape_4, ~] = compute_local_shape(gx1, res, a, p, [X2Y2_IM(1)-1; X2Y2_IM(2)+1], th);
+% [ad4]=check_overlap(ovlp,loc_shape_4,imag1);
+% 
+% [shap]=make_smooth_convex_shap_modification_test([1,1],3.05,3.31,[15.1,15.3],2,0);
+% x_axis=max(sum(shap,2));
+% y_axis=max(sum(shap,1));
+% 
+% err_1=x_axis-6;
+% err_2=y_axis-7;
+% 
+% assert(isequal(err_1,0),'Fail in make_smooth_convex_shap_modification_test while checking whether the generated shape has the expected axis length in x direction');
+% assert(isequal(err_2,0),'Fail in make_smooth_convex_shap_modification_test while checking whether the generated shape has the expected axis length in y direction');
+% 
+% % Checking if rotation is working fine
+% 
+% [shap]=make_smooth_convex_shap_modification_test([1,1],3.05,3.31,[15.1,15.3],2,90);
+% x_axis_2=max(sum(shap,2));
+% y_axis_2=max(sum(shap,1));
+% 
+% err_3=x_axis_2-7;
+% err_4=y_axis_2-6;
+% 
+% assert(isequal(err_3,0),'Fail in make_smooth_convex_shap_modification_test while checking whether the generated shape has the expected axis length in x direction after shape rotation');
+% assert(isequal(err_4,0),'Fail in make_smooth_convex_shap_modification_test while checking whether the generated shape has the expected axis length in y direction after shape rotation');
+
+
+
+
 end
 
