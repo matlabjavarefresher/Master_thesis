@@ -10,7 +10,7 @@ DX = makegrid(X_SH_C);
 DX = rotate_grid(DX, th);
 DX = abs(DX);
 lhs_shape_equation=(abs(bsxfun(@times, DX, 1./a)).^p);
-loc_shape = cf(shiftdim(sum(lhs_shape_equation,1),1),res);
+loc_shape = cf(shiftdim(sum(lhs_shape_equation,1),1).^(1/p),res);
 
 end
 

@@ -6,8 +6,8 @@ X2_SH = X1_SH + n ./ res;
 
 % Why not linspace(0,1,round(a)) and linspace(0,1,round(b))
 
-X_SH {1,1}= bsxfun(@plus, X1_SH(1), bsxfun(@times, X2_SH(1)-X1_SH(1), linspace(0, 1,n(1))));
-X_SH {2,1}= bsxfun(@plus, X1_SH(2), bsxfun(@times, X2_SH(2)-X1_SH(2), linspace(0, 1,n(2))));
+X_SH {1,1}= bsxfun(@plus, X1_SH(1), bsxfun(@times, X2_SH(1)-X1_SH(1), linspace(0, 1,n)));
+X_SH {2,1}= bsxfun(@plus, X1_SH(2), bsxfun(@times, X2_SH(2)-X1_SH(2), linspace(0, 1,n)));
 
 end
 
