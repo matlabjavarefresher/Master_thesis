@@ -1,4 +1,5 @@
 function [X_SH, IC1R1_SH]=compute_local_coords(X1Y1_IM, res, CXY_SH, w, n)
+
 X1Y1_SH = CXY_SH - w/2;
 IC1R1_SH = global2index(X1Y1_IM, res, X1Y1_SH, @floor);
 X1_SH = index2global(X1Y1_IM, res, IC1R1_SH);

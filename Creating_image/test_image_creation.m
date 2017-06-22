@@ -12,12 +12,13 @@ N = ceil((X2Y2_IM-X1Y1_IM).*res);
 img0 = zeros(N')';
 
 shape_type='smooth_convex';  % 'smooth_convex', Other options if and when required
-NS=200;% Number of shapes required
+NS=100;% Number of shapes required
 max_try=10*NS; % Max number of tries to place n shapes on the image
-ovlp=1; %1 for overlap and 0 for no overlap
-cutoff_func= @cutoff_sharp;
+ovlp=0.1; %1 for allow overlap, 0 for no overlap and anything b/w 0 and 1 for
+        % partial overlap
+% cutoff_func= @cutoff_sharp;
 cutoff_func= @(x,res)cutoff_smooth(x,res,20);
-combinator_func= @combine_sum1;
+%combinator_func= @combine_sum1;
 combinator_func= @combine_sum2;
 
 %% Generate and display image
@@ -31,8 +32,8 @@ switch shape_type
         S.add(SimParameter('a_dist',translate(BetaDistribution(2,2), 60, 10)));
         S.add(SimParameter('b_dist',translate(BetaDistribution(2,2), 40, 20)));
         S.add(SimParameter('theta_dist',translate(BetaDistribution(2,2), 0, pi/2)));
-        %S.add(SimParameter('pow_dist',translate(BetaDistribution(2,2), (min_pow+max_pow)/2, (max_pow-min_pow)/2)));
-        S.add(SimParameter('pow_dist',translate(ExponentialDistribution(0.5), min_pow)));
+        S.add(SimParameter('pow_dist',translate(BetaDistribution(2,2), (min_pow+max_pow)/2, (max_pow-min_pow)/2)));
+        %S.add(SimParameter('pow_dist',translate(ExponentialDistribution(0.5), min_pow)));
         S.add(SimParameter('C_X',UniformDistribution(-0.2*(size(img0,2)/res),1.2*(size(img0,2)/res))));
         S.add(SimParameter('C_Y',UniformDistribution(-0.2*(size(img0,1)/res),1.2*(size(img0,1)/res))));
         
@@ -42,6 +43,7 @@ switch shape_type
 end
 %subplot(3,3,1)
 imshow(img1);
+
 
 
 % %% Lineal path function calculation
