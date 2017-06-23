@@ -1,5 +1,7 @@
 function y=cutoff_smooth(x, res, C)
-y=atan(C*(1-x)*max(res))/pi+0.5;
+p = 0.02;
+C1 = 2*tan(pi/2*(1-p));
+y=atan(C1*(1-x)*res/C)/pi+0.5;
 end
 
 

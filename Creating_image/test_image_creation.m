@@ -3,6 +3,9 @@ clc
 
 %% Initialising the Image (background for the shapes)
 
+rand('seed', 1234);
+randn('seed', 1234);
+
 gx1y1 = [3; 4.5];
 gx2y2 = [1000; 1000];
 
@@ -11,22 +14,30 @@ res=1;
 gn = ceil((gx2y2-gx1y1).*res);
 img0 = zeros(gn')';
 
-sh_tp='smooth_convex';  % 'smooth_convex', Other options if and when required
-ns=30;% Number of shapes required
-mx_tr=10*ns; % Max number of tries to place ns shapes on the image
-ov=0; %1 for allow overlap, 0 for no overlap and anything b/w 0 and 1 for
-% partial overlap
+shape_type = 'smooth_convex';  % 'smooth_convex', Other options if and when required
+num_shapes = 10;% Number of shapes required
+max_tries = 10*num_shapes; % Max number of tries to place ns shapes on the image
+
+
 % cutoff_func= @cutoff_sharp;
-cut_fn= @(x,res)cutoff_smooth(x,res,20);
+cutoff_func = @(x,res)cutoff_smooth(x, res, 1);
+
 %combinator_func= @combine_sum1;
-comb_fn= @combine_sum2;
-ov_fn = @(im1,im2,res,am_bm) allow_absolute_overlap(im1,im2,res,am_bm,0.8);
+combine_func = @combine_sum2;
+
+A_no_overlap = 0;
+A_always_allow = inf;
+A_small_overlap = 300;
+A_medium_overlap = 2000;
+A_large_overlap = 10000;
+
+A_overlap_limit = A_medium_overlap;
+overlap_func = @(im1,im2) allow_absolute_overlap(im1, im2, res, A_overlap_limit);
 
 %% Generate and display image
 
-switch sh_tp
+switch shape_type
     case 'smooth_convex'
-        
         mn_pow = 2; mx_pow = 10;
         %min_pow = 1.0; max_pow = 7.05;
         S=SimParamSet();
@@ -38,7 +49,7 @@ switch sh_tp
         S.add(SimParameter('C_X',UniformDistribution(-0.2*(size(img0,2)/res),1.2*(size(img0,2)/res))));
         S.add(SimParameter('C_Y',UniformDistribution(-0.2*(size(img0,1)/res),1.2*(size(img0,1)/res))));
         
-        [img1,sh_cnt]=create_image(img0,res,ns,ov,mx_tr,sh_tp,gx1y1,S,cut_fn,comb_fn,ov_fn);
+        [img1,sh_cnt]=create_image(img0, res, num_shapes, max_tries, gx1y1,S,cutoff_func,combine_func,overlap_func);
         
         disp([num2str(sh_cnt) ' shapes were placed']);
 end
