@@ -1,9 +1,9 @@
-function [I_R_SH_REQ, I_C_SH_REQ] = fetch_image_indices_in_shape (imag,loc_shape,IC1R1_SH)
+function [gr_sh, gj_sh] = fetch_image_indices_in_shape (im_sz,sh_sz,gj1i1_sh)
 
-[I_R_SH_LOG,I_C_SH_LOG]=fetch_shape_indices_in_image(imag,loc_shape,IC1R1_SH);
+[li_sh_log,lj_sh_log]=fetch_shape_indices_in_image(im_sz,sh_sz,gj1i1_sh);
 
-I_C_SH_REQ = IC1R1_SH(1) + find(I_C_SH_LOG) -1;
-I_R_SH_REQ = IC1R1_SH(2) + find(I_R_SH_LOG) -1;
+gj_sh = gj1i1_sh(1) + find(lj_sh_log) -1;
+gr_sh = gj1i1_sh(2) + find(li_sh_log) -1;
 
 end
 

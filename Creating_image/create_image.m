@@ -1,40 +1,32 @@
-function [imag,shp_count]=create_image(imag,res,NS,ovlp,max_try,shp_type,X1Y1_IM,S,cf,cof,varargin)
+function [imag,sh_cnt]=create_image(imag,res,ns,ov,mx_try,sh_tp,gx1y1,S,cut_fn,comb_fn,ov_fn,varargin)
 
-shp_count=0;
-attmpt=0;
+sh_cnt=0;
+iter=0;
+am_bm=[0;0];
 
-
-switch shp_type
-    
+switch sh_tp
     case 'smooth_convex'
-        S_sam=S.sample(max_try);
-        a=S_sam(1,:);
-        b=S_sam(2,:);
-        th=S_sam(3,:);
-        pow=S_sam(4,:);
-        C_XY=[S_sam(5,:);S_sam(6,:)];
-        
-        
-        while (shp_count<NS && attmpt<max_try)
+        while (sh_cnt<ns && iter<mx_try)
             
-            attmpt=attmpt+1;
-            
-            [loc_shape, IC1R1_SH] = compute_local_shape(X1Y1_IM, res, [a(attmpt);b(attmpt)], pow(attmpt), C_XY(:,attmpt), th(attmpt),cf);
-            
-            [ad]=check_overlap(ovlp,loc_shape,imag,IC1R1_SH);
-            
-            if ad==0
+            s=S.sample(1);
+            a=s(1);
+            b=s(2);
+            th=s(3);
+            pow=s(4);
+            gcxy_sh=[s(5);s(6)];
+            iter=iter+1;
+            [sh, gj1i1_sh] = compute_local_shape(gx1y1, res, [a;b], pow, gcxy_sh, th,cut_fn);
+            am_bm=((am_bm*(iter-1))+[a;b])/iter;
+            [add]=check_overlap(ov,sh,imag,gj1i1_sh,ov_fn,res,am_bm);
+
+            if add==0
                 continue;
             end
             
-            imag = place_imag(imag, loc_shape, IC1R1_SH,cof);
-            
-            shp_count=shp_count+1;
+            imag = place_imag(imag, sh, gj1i1_sh,comb_fn);
+            sh_cnt=sh_cnt+1;
             
         end
-        
 end
-
-
 end
 

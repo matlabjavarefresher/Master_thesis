@@ -1,6 +1,10 @@
-function imag = place_imag(imag, loc_shape, IC1R1_SH,comb_func)
-[I_R_SH_REQ, I_C_SH_REQ] = fetch_image_indices_in_shape (imag,loc_shape,IC1R1_SH);
-[I_R_SH_LOG,I_C_SH_LOG]=fetch_shape_indices_in_image(imag,loc_shape,IC1R1_SH);
-imag(I_R_SH_REQ,I_C_SH_REQ) = comb_func(imag(I_R_SH_REQ,I_C_SH_REQ), loc_shape(I_R_SH_LOG,I_C_SH_LOG));
+function imag = place_imag(imag, sh, gj1r1_sh,cmb_func)
+im_sz=size(imag);
+sh_sz=size(sh);
+[gr_sh, gj_sh] = fetch_image_indices_in_shape (im_sz,sh_sz,gj1r1_sh);
+[li_sh_log,lj_sh_log]=fetch_shape_indices_in_image(im_sz,sh_sz,gj1r1_sh);
+im_rq=imag(gr_sh,gj_sh);
+sh_rq=sh(li_sh_log,lj_sh_log);
+imag(gr_sh,gj_sh) = cmb_func(im_rq, sh_rq);
 end
 

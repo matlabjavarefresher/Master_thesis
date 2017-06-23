@@ -1,7 +1,7 @@
-function IC1R1_SH=global2index(X1Y1_IM, res, X1Y1_SH, round_func)
+function gj1i1_sh=global2index(gx1y1, res, gx1y1_sh, round_func)
 if nargin<4
     round_func = @round;
 end
-IC1R1_SH = round_func((X1Y1_SH-X1Y1_IM).*res);
+gj1i1_sh = round_func((gx1y1_sh-gx1y1)*res);
 end
 

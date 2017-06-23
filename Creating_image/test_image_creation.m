@@ -2,44 +2,45 @@ clear
 clc
 
 %% Initialising the Image (background for the shapes)
-X1Y1_IM = [3; 4.5];
-X2Y2_IM = [1000; 1000];
 
-X_U_L=1;
-res=1/X_U_L;
+gx1y1 = [3; 4.5];
+gx2y2 = [1000; 1000];
 
-N = ceil((X2Y2_IM-X1Y1_IM).*res);
-img0 = zeros(N')';
+res=1;
 
-shape_type='smooth_convex';  % 'smooth_convex', Other options if and when required
-NS=100;% Number of shapes required
-max_try=10*NS; % Max number of tries to place n shapes on the image
-ovlp=0.1; %1 for allow overlap, 0 for no overlap and anything b/w 0 and 1 for
-        % partial overlap
+gn = ceil((gx2y2-gx1y1).*res);
+img0 = zeros(gn')';
+
+sh_tp='smooth_convex';  % 'smooth_convex', Other options if and when required
+ns=30;% Number of shapes required
+mx_tr=10*ns; % Max number of tries to place ns shapes on the image
+ov=0; %1 for allow overlap, 0 for no overlap and anything b/w 0 and 1 for
+% partial overlap
 % cutoff_func= @cutoff_sharp;
-cutoff_func= @(x,res)cutoff_smooth(x,res,20);
+cut_fn= @(x,res)cutoff_smooth(x,res,20);
 %combinator_func= @combine_sum1;
-combinator_func= @combine_sum2;
+comb_fn= @combine_sum2;
+ov_fn = @(im1,im2,res,am_bm) allow_absolute_overlap(im1,im2,res,am_bm,0.8);
 
 %% Generate and display image
 
-switch shape_type
+switch sh_tp
     case 'smooth_convex'
-
-        min_pow = 2; max_pow = 10;
+        
+        mn_pow = 2; mx_pow = 10;
         %min_pow = 1.0; max_pow = 7.05;
         S=SimParamSet();
         S.add(SimParameter('a_dist',translate(BetaDistribution(2,2), 60, 10)));
         S.add(SimParameter('b_dist',translate(BetaDistribution(2,2), 40, 20)));
         S.add(SimParameter('theta_dist',translate(BetaDistribution(2,2), 0, pi/2)));
-        S.add(SimParameter('pow_dist',translate(BetaDistribution(2,2), (min_pow+max_pow)/2, (max_pow-min_pow)/2)));
+        S.add(SimParameter('pow_dist',translate(BetaDistribution(2,2), (mn_pow+mx_pow)/2, (mx_pow-mn_pow)/2)));
         %S.add(SimParameter('pow_dist',translate(ExponentialDistribution(0.5), min_pow)));
         S.add(SimParameter('C_X',UniformDistribution(-0.2*(size(img0,2)/res),1.2*(size(img0,2)/res))));
         S.add(SimParameter('C_Y',UniformDistribution(-0.2*(size(img0,1)/res),1.2*(size(img0,1)/res))));
         
-        [img1,shp_count]=create_image(img0,res,NS,ovlp,max_try,shape_type,X1Y1_IM,S,cutoff_func,combinator_func);
+        [img1,sh_cnt]=create_image(img0,res,ns,ov,mx_tr,sh_tp,gx1y1,S,cut_fn,comb_fn,ov_fn);
         
-        disp([num2str(shp_count) ' shapes were placed']);
+        disp([num2str(sh_cnt) ' shapes were placed']);
 end
 %subplot(3,3,1)
 imshow(img1);

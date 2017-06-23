@@ -1,5 +1,5 @@
-function x=index2global(X1Y1_IM, res, IC1R1_SH)
-x = (IC1R1_SH./res) + X1Y1_IM;
+function gx1y1_sh=index2global(gx1y1, res, gj1i1_sh)
+gx1y1_sh = (gj1i1_sh/res) + gx1y1;
 end
 
 
