@@ -1,6 +1,6 @@
 function [avg_corr_wrt_dist] = auto_corr(A)
 
-row_ind=find(all((A==0),2)); %Finding the rows which are fully zero
+zero_rows=find(all((A==0),2)); %Finding the rows which are fully zero
 inp=bsxfun(@minus,A,mean(A(:))); %First subtracting mean pixel value from each pixel value
 
 %% Using fft manually
@@ -23,7 +23,7 @@ for i=1:size(inp,1)
 end
 
 ext_corr=corr(:,size(inp,2):1:size(corr,2));
-ext_corr(row_ind,:)=ones(size(row_ind,1),size(ext_corr,2)); 
+ext_corr(zero_rows,:)=ones(size(zero_rows,1),size(ext_corr,2)); 
 corr_wrt_dist=bsxfun(@rdivide,ext_corr,(size(inp,2):-1:1));
 avg_corr_wrt_dist=mean(corr_wrt_dist,1);    
     

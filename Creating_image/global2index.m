@@ -1,7 +1,12 @@
-function gj1i1_sh=global2index(gx1y1, res, gx1y1_sh, round_func)
+function shape_top_left_index_global=global2index(image_top_left, res, ...
+    shape_top_left_global, round_func)
+
 if nargin<4
     round_func = @round;
 end
-gj1i1_sh = round_func((gx1y1_sh-gx1y1)*res);
+
+shape_top_left_index_global = round_func((shape_top_left_global-...
+    image_top_left)*res);
+
 end
 

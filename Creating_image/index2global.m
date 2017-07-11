@@ -1,5 +1,9 @@
-function gx1y1_sh=index2global(gx1y1, res, gj1i1_sh)
-gx1y1_sh = (gj1i1_sh/res) + gx1y1;
+function shape_top_left_global=index2global(image_top_left_global, res,...
+    shape_top_left_index_global)
+
+shape_top_left_global = (shape_top_left_index_global/res)...
+    + image_top_left_global;
+
 end
 
 

@@ -1,4 +1,4 @@
-function [do_add] = allow_absolute_overlap(im1, im2, res, A_limit)
+function [do_add] = allow_absolute_overlap(im1, im2, shape_count, res, A_limit)
 % ALLOW_ABSOLUTE_OVERLAP Limits absolute overlap between shapes.
 %   [DO_ADD] = ALLOW_ABSOLUTE_OVERLAP(IM1, IM2, RES, A_LIMIT) will allow IM2
 %   to be added to IM1 in case the overlap (scalar product) between IM1 and
@@ -29,18 +29,9 @@ function [do_add] = allow_absolute_overlap(im1, im2, res, A_limit)
 
 im = im1 .* im2;
 A = sum(im(:)) / res^(ndims(im));
-A
-do_add = A < A_limit;
 
-% % ovlp_extent0=sum(sum(im))/numel(im);
-% % ovlp_extent1=sum(sum(im))/numel(im>0);
-%
-%  ovlp_extent2=sum(sum(im==0))/numel(im);
-%
-%  ovlp_extent3=sum(sum(im1(im1 & im2)))/numel(im1(im1 & im2)>0);
-%
-% % ad = ovlp_extent1<ovlp;
-%
-% ad=(1-ovlp_extent2)<ovlp & (ovlp_extent3 <ovlp);
+% do_add = A < A_limit; Original as on 25-06-17
+% do_add = (A > A_limit(1) & A < A_limit(2)) | (~shape_count);
+do_add = ((A==0) & (shape_count<=A_limit(1))) | ((A > A_limit(2) & A < A_limit(3)) & (shape_count>A_limit(1) & shape_count<=A_limit(4))) | ((A > 800 & A < 1600) & (shape_count>A_limit(4)));
 
 end

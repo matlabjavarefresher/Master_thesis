@@ -1,16 +1,16 @@
-function [sh, gj1i1_sh, ln] = compute_local_shape(gx1y1, res, a, p, gcxy_sh, th,cf)
+function [shape, shape_top_left_index_global, shape_size] = compute_local_shape(image_top_left, res, a_b, exponent, shape_center_global, theta,cutoff_func)
 
-w = 2*sqrt(sum(a.^2))+4;
-ln = ceil(res*w)+1;
-[gxy_sh, gj1i1_sh]=compute_global_coords_of_shape(gx1y1, res, gcxy_sh, w, ln);
+shape_width = 2*sqrt(sum(a_b.^2))+4;
+shape_size = ceil(res*shape_width)+1;
+[shape_xy_coord_global, shape_top_left_index_global]=compute_global_coords_of_shape(image_top_left, res, shape_center_global, shape_width, shape_size);
 
-gxy_sh_cl = cellfun(@minus,gxy_sh,num2cell(gcxy_sh),'UniformOutput',false);
+shape_xy_coord_local = cellfun(@minus,shape_xy_coord_global,num2cell(shape_center_global),'UniformOutput',false);
 
-gxy_sh_gr = makegrid(gxy_sh_cl);
-gxy_sh_rot = rotate_grid(gxy_sh_gr, th);
-gxy_sh = abs(gxy_sh_rot);
-lhs_sh_eq=(abs(bsxfun(@times, gxy_sh, 1./a)).^p);
-sh = cf(shiftdim(sum(lhs_sh_eq,1),1).^(1/p),res);
+xy_coord_grid = makegrid(shape_xy_coord_local);
+xy_coord_rotated = rotate_grid(xy_coord_grid, theta);
+shape_xy_coord_local = abs(xy_coord_rotated);
+lhs_shape_equation=(abs(bsxfun(@times, shape_xy_coord_local, 1./a_b)).^exponent);
+shape = cutoff_func(shiftdim(sum(lhs_shape_equation,1),1).^(1/exponent),res);
 
 end
 

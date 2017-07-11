@@ -1,32 +1,32 @@
-function [c_l_x] = chord_length_func_calc(img)
+function [chord_length_x] = chord_length_func_calc(image)
 
-cl=zeros(size(img,2),1);
+chord_lengths=zeros(size(image,2),1);
 
-img=[img,zeros(size(img,1),1)];
+image=[image,zeros(size(image,1),1)];
 
-for i=1:size(img,1)
+for i=1:size(image,1)
     
-    countr=0;
-    for j=1:size(img,2)
+    counter=0;
+    for j=1:size(image,2)
 
-        if img(i,j)==0  
+        if image(i,j)==0  
             
-            if (countr>1)
-                cl(countr-1)=cl(countr-1)+1;
+            if (counter>1)
+                chord_lengths(counter-1)=chord_lengths(counter-1)+1;
                 % if statement to avoid counting chords of 0 length
 
                 % (countr=0) or single pixels (countr=1)
             end
-            countr=0;
+            counter=0;
         else
-            countr=countr+1;
+            counter=counter+1;
         end
         
         
     end
 end
 
-c_l_x=cl/sum(cl);
+chord_length_x=chord_lengths/sum(chord_lengths);
 
 %% Earlier code
 % for i=1:size(img,1)

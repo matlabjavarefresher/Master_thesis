@@ -1,5 +1,5 @@
-function gxy_sh_rt=rotate_grid(gxy_sh_gr, theta)
-dim = size(gxy_sh_gr, 1);
+function xy_coord_rotated=rotate_grid(xy_coord_grid, theta)
+dim = size(xy_coord_grid, 1);
 switch dim
     case 2
         c = cos(theta);
@@ -8,6 +8,6 @@ switch dim
     otherwise
         error('not supported yet');
 end
-siz = size(gxy_sh_gr);
-gxy_sh_rt=reshape(U*reshape(gxy_sh_gr, dim, []), siz);
+siz = size(xy_coord_grid);
+xy_coord_rotated=reshape(U*reshape(xy_coord_grid, dim, []), siz);
 end

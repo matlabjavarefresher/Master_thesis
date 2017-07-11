@@ -1,24 +1,24 @@
-function [l_p_x] = lineal_path_calc(img)
+function [lineal_path_x] = lineal_path_calc(img)
 
-c=zeros(size(img,2),1);
-tot_count=0;
+path_length=zeros(size(img,2),1);
+total_count=0;
 
 for i=1:size(img,1)
-    countr=0;
+    counter=0;
     for j=1:size(img,2)
-        tot_count=tot_count+1;
+        total_count=total_count+1;
         if img(i,j)==0
-            countr=0;
+            counter=0;
         else
-            countr=countr+1;
-            c=c+[ones(countr-1,1);zeros(length(c)-countr+1,1)];
+            counter=counter+1;
+            path_length=path_length+[ones(counter-1,1);zeros(length(path_length)-counter+1,1)];
             %ones(countr-1) to avoid counting line segments of zero length (or
             %single pixels)
         end
     end
 end
 
-l_p_x=c/tot_count;
+lineal_path_x=path_length/total_count;
 
 
 %% Earlier code
