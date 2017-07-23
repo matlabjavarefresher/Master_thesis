@@ -40,8 +40,8 @@ A = [1     1     1     1     1     0     0     1     0     0;
      1     1     1     0     1     0     1     1     0     0];
   
  
-l_p_x_test=auto_corr(A);
-l_p_y_test=auto_corr(A');
+l_p_x_test=lineal_path_calc(A);
+l_p_y_test=lineal_path_calc(A');
 
 l_p_x_actual=[25/100;11/100;3/100;1/100;zeros(6,1)];
 l_p_y_actual=[25/100;9/100;4/100;1/100;zeros(6,1)];
@@ -59,8 +59,8 @@ B=   [1     1     1     0;
      1     1     0     0;
      0     0     0     1];
  
-l_p_xr_test=auto_corr(B);
-l_p_yr_test=auto_corr(B');
+l_p_xr_test=lineal_path_calc(B);
+l_p_yr_test=lineal_path_calc(B');
 
 l_p_xr_actual=[3/12;1/12;zeros(2,1)];
 l_p_yr_actual=[2/12;zeros(2,1)];

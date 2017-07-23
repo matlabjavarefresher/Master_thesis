@@ -5,28 +5,30 @@ inp=bsxfun(@minus,A,mean(A(:))); %First subtracting mean pixel value from each p
 
 %% Using fft manually
 
-% fftis=fft(inp,2*size(inp,2)-1,2); %Taking the fft of the input signal after padding it with required number of zeros to satisfy convolution
-% prod=fftis.*conj(fftis); 
-% corr=ifft(prod,[],2); % Inverse fft of the product of fft with it's conjugate
-% ext_corr=corr(:,1:size(inp,2)); %extract one half of the symmetric output of ifft (from the middle to one end) 
-% ext_corr(row_ind,:)=ones(size(row_ind,1),size(ext_corr,2)); % If any row has only zero elements in your input array
-%                                                             % set all the correlation values for that row to 1 
-% nrmlisd_corr=bsxfun(@rdivide,ext_corr,ext_corr(:,1)); % Normalise the extracted correlation values with first element or diagonal element      
-% corr_wrt_dist=bsxfun(@rdivide,nrmlisd_corr,(size(inp,2):-1:1)); % Divide with the number of correlation matrix entrees used in getting the sum 
-% avg_corr_wrt_dist=mean(corr_wrt_dist,1); % Get the mean of the correlation coefficients corresponding to each row
+fftis=fft(inp,2*size(inp,2)-1,2); %Taking the fft of the input signal after padding it with required number of zeros to satisfy convolution
+prod=fftis.*conj(fftis); 
+corr=ifft(prod,[],2); % Inverse fft of the product of fft with it's conjugate
+ext_corr=corr(:,1:size(inp,2)); %extract one half of the symmetric output of ifft (from the middle to one end) 
+ext_corr(zero_rows,:)=ones(size(zero_rows,1),size(ext_corr,2)); % If any row has only zero elements in your input array
+                                                            % set all the correlation values for that row to 1 
+nrmlisd_corr=bsxfun(@rdivide,ext_corr,ext_corr(:,1)); % Normalise the extracted correlation values with first element or diagonal element      
+corr_wrt_dist=bsxfun(@rdivide,nrmlisd_corr,(size(inp,2):-1:1)); % Divide with the number of correlation matrix entrees used in getting the sum 
+avg_corr_wrt_dist=mean(corr_wrt_dist,1); % Get the mean of the correlation coefficients corresponding to each row
 
 %% Using built in xcorr with for loop
 
-corr=zeros(size(inp,1),2*size(inp,2)-1);
-for i=1:size(inp,1)
-    corr(i,:)=xcorr(inp(i,:),'coeff');
-end
+% IF LICENSE AVAILABLE USE THIS
 
-ext_corr=corr(:,size(inp,2):1:size(corr,2));
-ext_corr(zero_rows,:)=ones(size(zero_rows,1),size(ext_corr,2)); 
-corr_wrt_dist=bsxfun(@rdivide,ext_corr,(size(inp,2):-1:1));
-avg_corr_wrt_dist=mean(corr_wrt_dist,1);    
-    
+% corr=zeros(size(inp,1),2*size(inp,2)-1);
+% for i=1:size(inp,1)
+%     corr(i,:)=xcorr(inp(i,:),'coeff');
+% end
+% 
+% ext_corr=corr(:,size(inp,2):1:size(corr,2));
+% ext_corr(zero_rows,:)=ones(size(zero_rows,1),size(ext_corr,2)); 
+% corr_wrt_dist=bsxfun(@rdivide,ext_corr,(size(inp,2):-1:1));
+% avg_corr_wrt_dist=mean(corr_wrt_dist,1);    
+     
 
 %%  Using built in xcorr without for loop
 
@@ -35,7 +37,7 @@ avg_corr_wrt_dist=mean(corr_wrt_dist,1);
 % corri = cellfun(xc,inpu,'UniformOutput',false);
 % corr=cell2mat(corri);
 % ext_corr=corr(:,size(inp,2):1:size(corr,2));
-% ext_corr(row_ind,:)=ones(size(row_ind,1),size(ext_corr,2)); 
+% ext_corr(zero_rows,:)=ones(size(zero_rows,1),size(ext_corr,2)); 
 % corr_wrt_dist=bsxfun(@rdivide,ext_corr,(size(inp,2):-1:1)); 
 % avg_corr_wrt_dist=mean(corr_wrt_dist,1);    
 

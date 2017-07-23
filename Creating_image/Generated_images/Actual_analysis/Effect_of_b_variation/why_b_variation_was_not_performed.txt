@@ -1,5 +1,0 @@
-I think b variation not required
-because if a is varied and the 
-shape is rotated it will also
-become b in some cases when 
-rotated by 90 degrees

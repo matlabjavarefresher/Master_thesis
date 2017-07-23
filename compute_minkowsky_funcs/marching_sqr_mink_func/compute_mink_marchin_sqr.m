@@ -1,4 +1,4 @@
-function [ar,per,ec] = compute_mink_marchin_sqr(img,tresh)
+function [per,ar,ec] = compute_mink_marchin_sqr(img,tresh)
 
 col_img=size(img,2);
 row_img=size(img,1);
