@@ -8,7 +8,7 @@ function [do_add] = allow_absolute_overlap(im1, im2, shape_count, res, A_limit)
 %
 % See also
 
-%   Elmar Zander
+%   Prem Ratan
 %   Copyright 2017, Inst. of Scientific Computing, TU Braunschweig
 %
 %   This program is free software: you can redistribute it and/or modify it
@@ -18,9 +18,6 @@ function [do_add] = allow_absolute_overlap(im1, im2, shape_count, res, A_limit)
 %   See the GNU General Public License for more details. You should have
 %   received a copy of the GNU General Public License along with this
 %   program.  If not, see <http://www.gnu.org/licenses/>.
-
-
-
 
 % Here the term absolute means that the computation of the overlap extent
 % below is based only on the scalar product of im1 and im2 and it is not
@@ -32,6 +29,6 @@ A = sum(im(:)) / res^(ndims(im));
 
 % do_add = A < A_limit; Original as on 25-06-17
 % do_add = (A > A_limit(1) & A < A_limit(2)) | (~shape_count);
-do_add = ((A==0) & (shape_count<=A_limit(1))) | ((A > A_limit(2) & A < A_limit(3)) & (shape_count>A_limit(1) & shape_count<=A_limit(4))) | ((A > 800 & A < 1600) & (shape_count>A_limit(4)));
-
+% do_add = ((A==0) & (shape_count<=A_limit(1))) | ((A > A_limit(2) & A < A_limit(3)) & (shape_count>A_limit(1) & shape_count<=A_limit(4))) | ((A > 800 & A < 1600) & (shape_count>A_limit(4)));
+do_add = ((A==0) & (shape_count<=A_limit(1))) | ((A > A_limit(2) & A < A_limit(3)) & (shape_count>A_limit(1)));
 end
