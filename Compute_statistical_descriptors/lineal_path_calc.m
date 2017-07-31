@@ -14,6 +14,7 @@ total_count=0;
 for i=1:size(img,1)
     counter=0;
     for j=1:size(img,2)
+
         total_count=total_count+1;
         if  img(i,j)==0
             counter=0;

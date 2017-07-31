@@ -11,8 +11,8 @@ num_shapes=1200;
 initial_shapes=80;
 min_overlap=1000;
 max_overlap=10000;
-a_dist=[45,20];
-b_dist=[35,10];
+a_dist=[55,20];
+b_dist=[45,10];
 theta_dist=[0,pi/2];
 min_max_power = [1,5];
 

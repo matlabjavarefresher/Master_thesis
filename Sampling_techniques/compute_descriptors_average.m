@@ -5,15 +5,15 @@ cols=size(image_set,3);
 max_size=max(rows,cols);
 num_images=size(image_set,1);
 
-descriptor_set=zeros(num_images,7,max_size);
+descriptors_set=zeros(num_images,9,max_size);
 
 for i=1:num_images
     
     image=squeeze(image_set(i,:,:));
-    descriptor_set(i,:,:)=compute_descriptors(image); 
+    descriptors_set(i,:,:)=compute_descriptors(image); 
 end
 
-sum_descriptor_set=squeeze(sum(descriptor_set,1));
+sum_descriptor_set=squeeze(sum(descriptors_set,1));
 mean_descriptors=sum_descriptor_set/num_images;
     
 end

@@ -6,8 +6,8 @@ function [relative_cost] = least_square_cost(a, b, w_v)
 
 %% New relative cost
 difference_squared=((a-b).^2);
-least_square_difference=sqrt(sum(difference_squared,2));
-relative_cost=least_square_difference./sqrt(sum(a.^2,2));
+least_square_difference=sqrt(sum(difference_squared,2))
+relative_cost=least_square_difference./sqrt(sum(b.^2,2))
 relative_cost=w_v'*relative_cost;
 end
 
