@@ -10,9 +10,10 @@ image_set=zeros(model_runs_per_sample,size(im_in,1),size(im_in,2));
 
 for i=1:model_runs_per_sample
 [image,~]=create_image(im_in, res, nsh, max_try, itl, S, cutoff_func, combine_func, overlap_func);
-image_gray=mat2gray(image);        
-image_binary=image_gray>0.5;
+image_binary=image>0.5;
 image_set(i,:,:)=image_binary;
+figure;
+imshow(image_binary);
 end
 
 [mean_descriptors]=compute_descriptors_average(image_set);

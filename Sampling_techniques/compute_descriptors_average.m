@@ -5,7 +5,7 @@ cols=size(image_set,3);
 max_size=max(rows,cols);
 num_images=size(image_set,1);
 
-descriptors_set=zeros(num_images,9,max_size);
+descriptors_set=zeros(num_images,10,max_size);
 
 for i=1:num_images
     

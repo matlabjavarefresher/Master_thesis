@@ -1,6 +1,6 @@
 function [descriptors] = compute_descriptors(img)
     
-    descriptors=zeros(9,max(size(img)));
+    descriptors=zeros(10,max(size(img)));
     rows=size(img,1);
     cols=size(img,2);
     descriptors(1,1:cols)=auto_corr(img);
@@ -12,6 +12,7 @@ function [descriptors] = compute_descriptors(img)
     descriptors(7,1)=imPerimeter(img);
     descriptors(8,1)=imArea(img);
     descriptors(9,1)=imEuler2d(img);
+    descriptors(10,1)=descriptors(7,1)/descriptors(8,1);
     
 end
 
