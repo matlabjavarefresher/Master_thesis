@@ -9,7 +9,7 @@ are=0;
 peri=0;
 ech=0;
 
-%Extracting sie lengths
+%Extracting side lengths
 
 a1=a(1);
 a2=a(2);

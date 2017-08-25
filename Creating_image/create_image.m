@@ -1,15 +1,14 @@
 function [image,shape_count]=create_image(image, res, num_shapes, max_tries, image_top_left, S, ...
     cutoff_func, combine_func, overlap_func, varargin)
 
+
 shape_count=0;
 iter=0;
 % store=1; % Used to store resulting image after the placement of each 
-         % batch of 100 shapes
-% ss=S.sample(max_tries,'mode','qmc'); % comment this for normal MC sampling
-ss=S.sample(max_tries);  % Uncomment this for normal MC sampling
+           % batch of 100 shapes
+ss=S.sample(max_tries);  
 while (shape_count<num_shapes && iter<max_tries)
-      s=ss(:,iter+1); %comment this
-    % s=S.sample(1); % UNcomment this
+     s=ss(:,iter+1); 
      a=s(1);
      b=s(2);
      theta=s(3);

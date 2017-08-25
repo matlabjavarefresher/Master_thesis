@@ -16,9 +16,9 @@ corr_wrt_dist=bsxfun(@rdivide,nrmlisd_corr,(size(inp,2):-1:1)); % Divide with th
 avg_corr_wrt_dist=mean(corr_wrt_dist,1); % Get the mean of the correlation coefficients corresponding to each row
 
 %% Using built in xcorr with for loop
-
-% IF LICENSE AVAILABLE USE THIS
-
+% 
+% % IF LICENSE AVAILABLE USE THIS
+% tic
 % corr=zeros(size(inp,1),2*size(inp,2)-1);
 % for i=1:size(inp,1)
 %     corr(i,:)=xcorr(inp(i,:),'coeff');
@@ -28,7 +28,7 @@ avg_corr_wrt_dist=mean(corr_wrt_dist,1); % Get the mean of the correlation coeff
 % ext_corr(zero_rows,:)=ones(size(zero_rows,1),size(ext_corr,2)); 
 % corr_wrt_dist=bsxfun(@rdivide,ext_corr,(size(inp,2):-1:1));
 % avg_corr_wrt_dist=mean(corr_wrt_dist,1);    
-     
+% toc     
 
 %%  Using built in xcorr without for loop
 

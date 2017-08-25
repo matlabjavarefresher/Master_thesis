@@ -11,10 +11,10 @@ num_shapes=1200;
 initial_shapes=80;
 min_overlap=1000;
 max_overlap=10000;
-a_dist=[30,20];
-b_dist=[20,10];
+a_dist=[20,10];% [30,20]
+b_dist=[20,10];%[20,10]
 theta_dist=[0,pi/2];
-min_max_power = [1,7];
+min_max_power = [1,3];% [1,7]
 
 
 %% Reading in specified optional parameters

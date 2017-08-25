@@ -30,5 +30,5 @@ A = sum(im(:)) / res^(ndims(im));
 % do_add = A < A_limit; Original as on 25-06-17
 % do_add = (A > A_limit(1) & A < A_limit(2)) | (~shape_count);
 % do_add = ((A==0) & (shape_count<=A_limit(1))) | ((A > A_limit(2) & A < A_limit(3)) & (shape_count>A_limit(1) & shape_count<=A_limit(4))) | ((A > 800 & A < 1600) & (shape_count>A_limit(4)));
-do_add = ((A==0) & (shape_count<=A_limit(1))) | ((A > A_limit(2) & A < A_limit(3)) & (shape_count>A_limit(1)));
+do_add = ((A==0) & (shape_count<A_limit(1))) | ((A > A_limit(2) & A < A_limit(3)) & (shape_count>=A_limit(1)));
 end
