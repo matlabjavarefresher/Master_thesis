@@ -11,15 +11,15 @@ num_shapes=10;
 initial_shapes=2;
 min_overlap=500;
 max_overlap=inf;
-a_dist=[25,5];% [30,20]
-b_dist=[25,5];%[20,10]
-c_dist=[25,5];
+a_dist=[25,15];% [30,20]
+b_dist=[25,15];%[20,10]
+c_dist=[25,15];
 pitch_dist=[0,pi/2];
 yaw_dist=[0,pi/2];
 roll_dist=[0,pi/2];
-min_max_power = [1,5];% latest first [1,5], [1,7]  tried 1:10 - rectangular 
+%shift_scale_power = [1,7];% latest first [1,5], [1,7]  tried 1:10 - rectangular 
                       % shapes visible
-
+exponent_parameter=0.1;
 
 %% Reading in specified optional parameters
 addOptional(p,'image_top_left',image_top_left,@isnumeric)
@@ -35,7 +35,7 @@ addOptional(p,'c_dist',c_dist,@isnumeric);
 addOptional(p,'yaw_dist',yaw_dist,@isnumeric);
 addOptional(p,'pitch_dist',pitch_dist,@isnumeric);
 addOptional(p,'roll_dist',roll_dist,@isnumeric);
-addOptional(p,'min_max_power',min_max_power,@isnumeric);
+addOptional(p,'exponent_parameter',exponent_parameter,@isnumeric);
 
 
 
@@ -48,7 +48,7 @@ addParameter(p,'image_size',ceil((p.Results.image_bottom_right-p.Results.image_t
 columns_rows_slices=ceil((p.Results.image_bottom_right-p.Results.image_top_left)*p.Results.resolution);
 addParameter(p,'image_in', zeros(columns_rows_slices(2),columns_rows_slices(1),columns_rows_slices(3)));
 addParameter(p,'max_tries', round(100*p.Results.num_shapes));
-addParameter(p,'power_dist', [(p.Results.min_max_power(1)+p.Results.min_max_power(2))/2, (p.Results.min_max_power(2)-p.Results.min_max_power(1))/2]);
+% addParameter(p,'power_dist', [(p.Results.min_max_power(1)+p.Results.min_max_power(2))/2, (p.Results.min_max_power(2)-p.Results.min_max_power(1))/2]);
 parse(p,varargin{:}); % To update p, so that, before initialising the methods, the 
           % updated variables in p, which now also includes the dependent 
           % variables set above (absent in previous p update), could be 
@@ -77,11 +77,11 @@ overhang_extent_z=(1/4)*shape_size_min/size(p.Results.image_in,3);
 S.add(SimParameter('a_dist',translate(BetaDistribution(2,2), p.Results.a_dist(1),p.Results.a_dist(2))));
 S.add(SimParameter('b_dist',translate(BetaDistribution(2,2), p.Results.b_dist(1),p.Results.b_dist(2))));
 S.add(SimParameter('c_dist',translate(BetaDistribution(2,2), p.Results.c_dist(1),p.Results.c_dist(2))));
-S.add(SimParameter('yaw_dist',translate(BetaDistribution(2,2),p.Results.yaw_dist(1),p.Results.yaw_dist(2))));
-S.add(SimParameter('pitch_dist',translate(BetaDistribution(2,2),p.Results.pitch_dist(1),p.Results.pitch_dist(2))));
-S.add(SimParameter('roll_dist',translate(BetaDistribution(2,2),p.Results.roll_dist(1),p.Results.roll_dist(2))));
-S.add(SimParameter('power_dist',translate(BetaDistribution(2,2), p.Results.power_dist(1), p.Results.power_dist(2))));
-% S.add(SimParameter('pow_dist',translate(ExponentialDistribution(0.5), min_pow)));
+S.add(SimParameter('yaw_dist',translate(BetaDistribution(1,1),p.Results.yaw_dist(1),p.Results.yaw_dist(2))));
+S.add(SimParameter('pitch_dist',translate(BetaDistribution(1,1),p.Results.pitch_dist(1),p.Results.pitch_dist(2))));
+S.add(SimParameter('roll_dist',translate(BetaDistribution(1,1),p.Results.roll_dist(1),p.Results.roll_dist(2))));
+%S.add(SimParameter('power_dist',translate(ExponentialDistribution(0.1), p.Results.power_dist(1), p.Results.power_dist(2))));
+S.add(SimParameter('exponent_dist',ExponentialDistribution(exponent_parameter)));
 S.add(SimParameter('shape_cx_global',UniformDistribution(-overhang_extent_x*(size(p.Results.image_in,2)/ p.Results.resolution),(1+overhang_extent_x)*(size(p.Results.image_in,2)/p.Results.resolution))));
 S.add(SimParameter('shape_cy_global',UniformDistribution(-overhang_extent_y*(size(p.Results.image_in,1)/p.Results.resolution),(1+overhang_extent_y)*(size(p.Results.image_in,1)/p.Results.resolution))));
 S.add(SimParameter('shape_cz_global',UniformDistribution(-overhang_extent_z*(size(p.Results.image_in,3)/p.Results.resolution),(1+overhang_extent_z)*(size(p.Results.image_in,3)/p.Results.resolution))));

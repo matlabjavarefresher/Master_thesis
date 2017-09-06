@@ -42,8 +42,9 @@ avg_corr_wrt_dist=mean(corr_wrt_dist,1); % Get the mean of the correlation coeff
 % avg_corr_wrt_dist=mean(corr_wrt_dist,1);    
 
 
-%% without fft
+%% without fft - MOSTLY WON'T WORK - MAY NOT BE USING THE RIGHT METHOD  
 % change=bsxfun(@minus,A(1:end,:),mean(A,2));
+% change=bsxfun(@minus,A(1:end,:),0);
 % covar=zeros(size(change,2),size(change,2),size(change,1));
 % correl=zeros(size(change,2),size(change,2),size(change,1));
 % sm=zeros(size(change,1),1);

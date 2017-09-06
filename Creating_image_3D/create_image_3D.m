@@ -17,7 +17,7 @@ while (shape_count<num_shapes && iter<max_tries)
     yaw=s(4);
     pitch=s(5);
     roll=s(6);
-    exponent=s(7);
+    exponent=2+s(7);
     shape_center_global=[s(8); s(9);s(10)];
     iter=iter+1;
     [shape, shape_top_left] = compute_local_shape_3D(image_top_left,...

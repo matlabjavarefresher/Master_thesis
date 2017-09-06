@@ -9,6 +9,7 @@ difference_squared=((a-b).^2); % b is your base descriptor and a is the
                                % computed descriptor
 least_square_difference=sqrt(sum(difference_squared,2))
 relative_cost=least_square_difference./sqrt(sum(b.^2,2))
-relative_cost=w_v'*relative_cost;
+% relative_cost=w_v'*relative_cost;
+relative_cost=max(w_v.*relative_cost);
 end
 
