@@ -9,6 +9,7 @@ max_number_of_queries=20;
 % store=1; % Used to store resulting image after the placement of each
 % batch of 100 shapes
 ss=S.sample(max_tries);
+
 while (shape_count<num_shapes && iter<max_tries)
     s=ss(:,iter+1);
     a=s(1);

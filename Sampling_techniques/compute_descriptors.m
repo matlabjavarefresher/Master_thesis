@@ -29,11 +29,11 @@ switch dimensions
         image_containing_all_columns=reshape(temp_2,cols*slices,rows,1);
         image_containing_all_beams=reshape(img,rows*cols,slices,1);
         descriptors(1,1:cols)=auto_corr(image_containing_all_rows);
-%         descriptors(1,251:cols)=zeros(1,50);
+        descriptors(1,251:cols)=zeros(1,50);
         descriptors(2,1:rows)=auto_corr(image_containing_all_columns);
-%         descriptors(2,251:rows)=zeros(1,50);
+        descriptors(2,251:rows)=zeros(1,50);
         descriptors(3,1:slices)=auto_corr(image_containing_all_beams);
-%         descriptors(3,251:slices)=zeros(1,50);
+        descriptors(3,251:slices)=zeros(1,50);
         descriptors(4,1:cols)=chord_length_func_calc(image_containing_all_rows);
         descriptors(5,1:rows)=chord_length_func_calc(image_containing_all_columns);
         descriptors(6,1:cols)=chord_length_func_calc(image_containing_all_beams);

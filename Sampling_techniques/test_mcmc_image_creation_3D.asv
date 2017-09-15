@@ -1,31 +1,31 @@
 %% Metropolis algorithm's parameters
 clear
 clc
-num_samples=100; % Required number of samples
+num_samples=30; % Required number of samples
 burn_in=1; % Ignore first few samples
 dimensions=16; % Number of parameters
 x_sampled=zeros(dimensions,num_samples+burn_in);
 descriptors_differences=zeros(num_samples+burn_in,1);
 acceptance_ratios=zeros(num_samples+burn_in,1);
 total_accepts=0;
-model_runs_per_sample=2;
+model_runs_per_sample=3;
 
 %% Initialising the model parameters influencing the shape, number of 
 % shapes and the minimum overlap 
 
-num_shapes=385; % 350,286 400 286 300 452 470 200 381 385
-initial_shapes=32; % 55,65 70 65 27 58 47 40 31 32
-min_overlap=15400; % 2040, 3000 2450 40000 13582 8000 6113 19697 19909
-a_mean=21.4; %26
-a_var=11.75; %10.5
-b_mean=25.77; %28.3
-b_var=12.7; %12.7
-c_mean=27; %27
-c_var=12.4; %12.4
+num_shapes=642; % 350,286 400 286 300 452 470 200 381 385 385 409 570 586
+initial_shapes=65; % 55,65 70 65 27 58 47 40 31 32 32 27 42
+min_overlap=21688; % 2040, 3000 2450 40000 13582 8000 6113 19697 19909 15400 17090 18045 15412 17263
+a_mean=28.3; %26 21.4 22 24.25 21.42
+a_var=12.3; %10.5 11.98 11.76
+b_mean=18.46; %28.3 23.83 25.77
+b_var=14.06; %12.7 14.53 14.82
+c_mean=24.67; %27 21.64 24.34 21.64
+c_var=13.58; %12.4 15.4 14.35
 % exponent_min=2;
 % exponent_max=5;
-exponent_parameter=0.2;
-yaw_mean=0;
+ellipsoid_fraction=0.8056;%0.2 0.4453 0.4356 0.777
+yaw_mean=0; 
 yaw_var=pi/2;
 pitch_mean=0;
 pitch_var=pi/2;
@@ -33,51 +33,51 @@ roll_mean=0;
 roll_var=pi/2;
 
 x=[num_shapes;initial_shapes;min_overlap;a_mean;a_var;b_mean;...
-    b_var;c_mean;c_var;exponent_parameter;yaw_mean;yaw_var;...
+    b_var;c_mean;c_var;ellipsoid_fraction;yaw_mean;yaw_var;...
     pitch_mean;pitch_var;roll_mean;roll_var]; % Initial parameter vector
 
 %% Initialising other model parameters
 [model_params,cutoff_func,combine_func,overlap_func]=...
     initialise_image_creation_model_3D('num_shapes',x(1),...
     'initial_shapes',x(2),'min_overlap',x(3),'a_dist',[x(4);x(5)],'b_dist',...
-    [x(6);x(7)],'c_dist',[x(8);x(9)],'exponent_parameter',x(10),'yaw_dist',...
+    [x(6);x(7)],'c_dist',[x(8);x(9)],'ellipsoid_fraction',x(10),'yaw_dist',...
     [x(11);x(12)],'pitch_dist',[x(13);x(14)],'roll_dist',[x(15);x(16)]);
 
 %% Setting prior distributions
 prior_distributions=SimParamSet();
-prior_distributions.add(SimParameter('prior_dist_num_shapes',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_initial_shapes',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_min_overlap',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_a_mean',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_a_var',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_b_mean',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_b_var',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_c_mean',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_c_var',UniformDistribution(0,2000000000)));
-% prior_distributions.add(SimParameter('prior_dist_exponent_min',UniformDistribution(0,2000000000)));
-% prior_distributions.add(SimParameter('prior_dist_exponent_max',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_exponent',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_yaw_mean',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_yaw_var',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_pitch_mean',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_pitch_var',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_roll_mean',UniformDistribution(0,2000000000)));
-prior_distributions.add(SimParameter('prior_dist_roll_var',UniformDistribution(0,2000000000)));
+prior_distributions.add(SimParameter('prior_dist_num_shapes',UniformDistribution(0,1000)));
+prior_distributions.add(SimParameter('prior_dist_initial_shapes',UniformDistribution(0,200)));
+prior_distributions.add(SimParameter('prior_dist_min_overlap',UniformDistribution(0,100000)));
+prior_distributions.add(SimParameter('prior_dist_a_mean',UniformDistribution(0,100)));
+prior_distributions.add(SimParameter('prior_dist_a_var',UniformDistribution(0,75)));
+prior_distributions.add(SimParameter('prior_dist_b_mean',UniformDistribution(0,100)));
+prior_distributions.add(SimParameter('prior_dist_b_var',UniformDistribution(0,75)));
+prior_distributions.add(SimParameter('prior_dist_c_mean',UniformDistribution(0,100)));
+prior_distributions.add(SimParameter('prior_dist_c_var',UniformDistribution(0,75)));
+%%% prior_distributions.add(SimParameter('prior_dist_exponent_min',UniformDistribution(0,2000000000)));
+%%% prior_distributions.add(SimParameter('prior_dist_exponent_max',UniformDistribution(0,2000000000)));
+prior_distributions.add(SimParameter('prior_dist_ellipsoid_fraction',UniformDistribution(0,1)));
+prior_distributions.add(SimParameter('prior_dist_yaw_mean',UniformDistribution(-pi/2,pi/2)));
+prior_distributions.add(SimParameter('prior_dist_yaw_var',UniformDistribution(-pi/2,pi/2)));
+prior_distributions.add(SimParameter('prior_dist_pitch_mean',UniformDistribution(-pi/2,pi/2)));
+prior_distributions.add(SimParameter('prior_dist_pitch_var',UniformDistribution(-pi/2,pi/2)));
+prior_distributions.add(SimParameter('prior_dist_roll_mean',UniformDistribution(-pi/2,pi/2)));
+prior_distributions.add(SimParameter('prior_dist_roll_var',UniformDistribution(-pi/2,pi/2)));
 
 %% Setting proposal distributions
 proposal_distributions=SimParamSet();
-proposal_distributions.add(SimParameter('proposal_dist_num_shapes',UniformDistribution(-20,20)));
-proposal_distributions.add(SimParameter('proposal_dist_initial_shapes',UniformDistribution(-4,4))); %Earlier -4,4
-proposal_distributions.add(SimParameter('proposal_dist_min_overlap',UniformDistribution(-2000,2000)));
-proposal_distributions.add(SimParameter('proposal_dist_a_mean',UniformDistribution(-2,2)));
-proposal_distributions.add(SimParameter('proposal_dist_a_var',UniformDistribution(-0.5,0.5)));
-proposal_distributions.add(SimParameter('proposal_dist_b_mean',UniformDistribution(-2,2)));
-proposal_distributions.add(SimParameter('proposal_dist_b_var',UniformDistribution(-0.5,0.5)));
-proposal_distributions.add(SimParameter('proposal_dist_c_mean',UniformDistribution(-2,2)));
-proposal_distributions.add(SimParameter('proposal_dist_c_var',UniformDistribution(-0.5,0.5)));
+proposal_distributions.add(SimParameter('proposal_dist_num_shapes',UniformDistribution(-30,30))); % -20,20 -10,10
+proposal_distributions.add(SimParameter('proposal_dist_initial_shapes',UniformDistribution(-10,10))); %Earlier -4,4,-4,4
+proposal_distributions.add(SimParameter('proposal_dist_min_overlap',UniformDistribution(-2000,2000))); %-2000,2000 1000,1000
+proposal_distributions.add(SimParameter('proposal_dist_a_mean',UniformDistribution(-4,4))); %-2,2 
+proposal_distributions.add(SimParameter('proposal_dist_a_var',UniformDistribution(-2,2))); %-0.5,0.5
+proposal_distributions.add(SimParameter('proposal_dist_b_mean',UniformDistribution(-4,4))); %-2,2
+proposal_distributions.add(SimParameter('proposal_dist_b_var',UniformDistribution(-2,2))); %-0.5,0.5
+proposal_distributions.add(SimParameter('proposal_dist_c_mean',UniformDistribution(-4,4))); %-2,2
+proposal_distributions.add(SimParameter('proposal_dist_c_var',UniformDistribution(-2,2))); %-0.5,0.5
 % proposal_distributions.add(SimParameter('proposal_dist_exponent_min',UniformDistribution(-1,1)));
 % proposal_distributions.add(SimParameter('proposal_dist_exponent_max',UniformDistribution(-1,1)));
-proposal_distributions.add(SimParameter('proposal_dist_exponent',UniformDistribution(-.08,.08)));
+proposal_distributions.add(SimParameter('proposal_dist_ellipsoid_fraction',UniformDistribution(-.1,.1)));  %-0.08,0.08 %-0.05,0.05
 proposal_distributions.add(SimParameter('proposal_dist_yaw_mean',UniformDistribution(0,0)));
 proposal_distributions.add(SimParameter('proposal_dist_yaw_var',UniformDistribution(-pi/20,pi/20)));
 proposal_distributions.add(SimParameter('proposal_dist_pitch_mean',UniformDistribution(0,0)));
@@ -96,9 +96,9 @@ proposal_distributions.add(SimParameter('proposal_dist_roll_var',UniformDistribu
 % prior_distributions.set_fixed('prior_dist_b_var',b_var);
 % prior_distributions.set_fixed('prior_dist_c_mean',c_mean);
 % prior_distributions.set_fixed('prior_dist_c_var',c_var);
-% prior_distributions.set_fixed('prior_dist_exponent_min',exponent_min);
-% prior_distributions.set_fixed('prior_dist_exponent_max',exponent_max);
-% prior_distributions.set_fixed('prior_dist_exponent',exponent_parameter);
+%%% prior_distributions.set_fixed('prior_dist_exponent_min',exponent_min);
+%%% prior_distributions.set_fixed('prior_dist_exponent_max',exponent_max);
+% prior_distributions.set_fixed('prior_dist_ellipsoid_fraction',ellipsoid_fraction);
 prior_distributions.set_fixed('prior_dist_yaw_mean',yaw_mean);
 prior_distributions.set_fixed('prior_dist_yaw_var',yaw_var);
 prior_distributions.set_fixed('prior_dist_pitch_mean',pitch_mean);
@@ -116,9 +116,9 @@ prior_distributions.set_fixed('prior_dist_roll_var',roll_var);
 % proposal_distributions.set_fixed('proposal_dist_b_var',0);
 % proposal_distributions.set_fixed('proposal_dist_c_mean',0);
 % proposal_distributions.set_fixed('proposal_dist_c_var',0);
-% proposal_distributions.set_fixed('proposal_dist_exponent_min',0);
-% proposal_distributions.set_fixed('proposal_dist_exponent_max',0);
-% proposal_distributions.set_fixed('proposal_dist_exponent',0);
+%%% proposal_distributions.set_fixed('proposal_dist_exponent_min',0);
+%%% proposal_distributions.set_fixed('proposal_dist_exponent_max',0);
+% proposal_distributions.set_fixed('proposal_dist_ellipsoid_fraction',0);
 proposal_distributions.set_fixed('proposal_dist_yaw_mean',0);
 proposal_distributions.set_fixed('proposal_dist_yaw_var',0);
 proposal_distributions.set_fixed('proposal_dist_pitch_mean',0);
@@ -131,13 +131,14 @@ proposal_distributions.set_fixed('proposal_dist_roll_var',0);
 % going from 5.0 to 5.1 will be accepted only with a probability of 0.1
 % error_distribution.pdf(50)=very small but not zero;
 % error_distribution.pdf(1.5)=0.16;
-error_distribution=SimParameter('error_distribution',NormalDistribution(0,0.03));
+error_distribution=SimParameter('error_distribution',NormalDistribution(0,0.5)); %0.35
 
 
 %% Cost func (assumed proportional to target density) parameters
 cost_func=@(a,b)least_square_cost(a, b, weight_vector);
 %FileName   = 'average_descriptors_for_image_sets.mat';
-FileName   = 'desc_tla_300_zxy_binary_2nd_areaopen.mat';
+%FileName   = 'desc_tla_300_zxy_binary_2nd_areaopen.mat';
+FileName= 'desc_tla_300_zxy_binary_2nd_areaopen_correl_signal_truncated.mat';
 upUpFolder = fileparts(pwd);
 %FolderName = fullfile(upUpFolder,
 %'Average_desrciptors_for_100_selected_porous_media_2d_slices');
@@ -145,7 +146,7 @@ FolderName = fullfile(fullfile(upUpFolder, 'Top_left_alternate_300'),'top_left_a
 File       = fullfile(FolderName, FileName);load(File);
 % base_descriptors=average_descriptors_for_image_sets(6,2).values;
 base_descriptors=mean_descriptors;
-weight_vector=[0;0;0;1;1;1;0;0;0;0;0];
+weight_vector=[3;3;3;3;3;3;4;4;1;2;1]; % 
 %weight_vector(size(base_descriptors,1),1)=2;
 
 % Initial computation for first step
@@ -173,7 +174,7 @@ for i = 1:num_samples+burn_in
     %% Creating image and computing likelihood
     
     [model_params,cutoff_func,combine_func,overlap_func]=initialise_image_creation_model_3D('num_shapes',x_new(1),'initial_shapes',x_new(2),'min_overlap',x_new(3),'a_dist',[x_new(4);x_new(5)],'b_dist',...
-    [x_new(6);x_new(7)],'c_dist',[x_new(8);x_new(9)],'exponent_parameter', x_new(10),'yaw_dist',...
+    [x_new(6);x_new(7)],'c_dist',[x_new(8);x_new(9)],'ellipsoid_fraction', x_new(10),'yaw_dist',...
     [x_new(11);x_new(12)],'pitch_dist',[x_new(13);x_new(14)],'roll_dist',[x_new(15);x_new(16)]);
     [descriptors_new] = create_image_and_compute_descriptors_3D(model_params,cutoff_func,combine_func,overlap_func,model_runs_per_sample);
     descriptors_difference_new= least_square_cost(descriptors_new,base_descriptors,weight_vector)

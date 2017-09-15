@@ -9,7 +9,6 @@ num_images=size(image_set,1);
 descriptors_set=zeros(num_images,11,max_size);
 
 for i=1:num_images
-    
     image=squeeze(image_set(i,:,:,:));
     descriptors_set(i,:,:)=compute_descriptors(image); 
 end

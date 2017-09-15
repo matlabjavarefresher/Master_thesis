@@ -6,12 +6,17 @@ switch dim
         c = cos(theta);
         s = sin(theta);
         U = [c, -s; s, c];
-   case 3
-       % The below setup is for an intrinsic rotation 
-       R_z= rotate_z(theta(1));
-       R_y= rotate_y(theta(2));
-       R_x= rotate_x(theta(3));
-       U=R_z*R_y*R_x;
+    case 3
+        % The below setup is for an intrinsic (moving frame) rotation
+        R_z= rotate_z(theta(1));
+        R_y= rotate_y(theta(2));
+        R_x= rotate_x(theta(3));
+        U=R_z*R_y*R_x;
+        % The below setup is for an extrinsic (fixed frame) rotation
+        %                 R_z= rotate_z(theta(3));
+        %                 R_y= rotate_y(theta(2));
+        %                 R_x= rotate_x(theta(1));
+        %                 U=R_z*R_y*R_x;
 end
 siz = size(xy_coord_grid);
 xyz_coord_rotated=reshape(U*reshape(xy_coord_grid, dim, []), siz);

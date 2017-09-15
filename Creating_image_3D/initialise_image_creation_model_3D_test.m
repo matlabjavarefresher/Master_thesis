@@ -1,4 +1,4 @@
-function [p,cutoff_func,combine_func,overlap_func]=initialise_image_creation_model_3D(varargin)
+function [p,cutoff_func,combine_func,overlap_func]=initialise_image_creation_model_3D_test(varargin)
 
 %model_params,cutoff_func,combine_func,overlap_func
 p = inputParser;
@@ -19,8 +19,9 @@ yaw_dist=[0,pi/2];
 roll_dist=[0,pi/2];
 %shift_scale_power = [1,7];% latest first [1,5], [1,7]  tried 1:10 - rectangular 
                       % shapes visible
-ellipsoid_fraction=0.777;
-exponent_threshold=5;
+exponent_parameter=0.5;                      
+% ellipsoid_fraction=0.777;
+% exponent_threshold=5;
 
 %% Reading in specified optional parameters
 addOptional(p,'image_top_left',image_top_left,@isnumeric)
@@ -36,8 +37,9 @@ addOptional(p,'c_dist',c_dist,@isnumeric);
 addOptional(p,'yaw_dist',yaw_dist,@isnumeric);
 addOptional(p,'pitch_dist',pitch_dist,@isnumeric);
 addOptional(p,'roll_dist',roll_dist,@isnumeric);
-addOptional(p,'ellipsoid_fraction',ellipsoid_fraction,@isnumeric);
-addOptional(p,'exponent_threshold',exponent_threshold,@isnumeric);
+% addOptional(p,'ellipsoid_fraction',ellipsoid_fraction,@isnumeric);
+% addOptional(p,'exponent_threshold',exponent_threshold,@isnumeric);
+addOptional(p,'exponent_parameter',exponent_parameter,@isnumeric);
 
 
 parse(p,varargin{:}); % To accept variable inputs so that the dependent
@@ -75,7 +77,7 @@ shape_size_min=sqrt(((2*(p.Results.a_dist(1)-p.Results.a_dist(2)))^2)+...
 overhang_extent_x=(1/4)*shape_size_min/size(p.Results.image_in,2);
 overhang_extent_y=(1/4)*shape_size_min/size(p.Results.image_in,1);
 overhang_extent_z=(1/4)*shape_size_min/size(p.Results.image_in,3);
-lambda=log(1-ellipsoid_fraction)/(2-exponent_threshold);
+% lambda=log(1-ellipsoid_fraction)/(2-exponent_threshold);
 S.add(SimParameter('a_dist',translate(BetaDistribution(2,2), p.Results.a_dist(1),p.Results.a_dist(2))));
 S.add(SimParameter('b_dist',translate(BetaDistribution(2,2), p.Results.b_dist(1),p.Results.b_dist(2))));
 S.add(SimParameter('c_dist',translate(BetaDistribution(2,2), p.Results.c_dist(1),p.Results.c_dist(2))));
@@ -83,7 +85,7 @@ S.add(SimParameter('yaw_dist',translate(BetaDistribution(1,1),p.Results.yaw_dist
 S.add(SimParameter('pitch_dist',translate(BetaDistribution(1,1),p.Results.pitch_dist(1),p.Results.pitch_dist(2))));
 S.add(SimParameter('roll_dist',translate(BetaDistribution(1,1),p.Results.roll_dist(1),p.Results.roll_dist(2))));
 %S.add(SimParameter('power_dist',translate(ExponentialDistribution(0.1), p.Results.power_dist(1), p.Results.power_dist(2))));
-S.add(SimParameter('exponent_dist',ExponentialDistribution(lambda)));
+S.add(SimParameter('exponent_dist',ExponentialDistribution(exponent_parameter)));
 S.add(SimParameter('shape_cx_global',UniformDistribution(-overhang_extent_x*(size(p.Results.image_in,2)/ p.Results.resolution),(1+overhang_extent_x)*(size(p.Results.image_in,2)/p.Results.resolution))));
 S.add(SimParameter('shape_cy_global',UniformDistribution(-overhang_extent_y*(size(p.Results.image_in,1)/p.Results.resolution),(1+overhang_extent_y)*(size(p.Results.image_in,1)/p.Results.resolution))));
 S.add(SimParameter('shape_cz_global',UniformDistribution(-overhang_extent_z*(size(p.Results.image_in,3)/p.Results.resolution),(1+overhang_extent_z)*(size(p.Results.image_in,3)/p.Results.resolution))));
